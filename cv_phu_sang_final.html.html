@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lê Hoàng Phú Sang — Data Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05070d;
+  --bg2:#090c14;
+  --bg3:#0e1220;
+  --card:#0d1220;
+  --border:#1a2235;
+  --border2:#202d42;
+  --accent:#4f8eff;
+  --cyan:#00d4ff;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --purple:#a855f7;
+  --text:#f0f4ff;
+  --text2:#7a8faa;
+  --text3:#3a4f66;
+  --jakarta:'Plus Jakarta Sans',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--jakarta);overflow-x:hidden;line-height:1.6}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--border2)}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:80px 80px;opacity:0.12;pointer-events:none;z-index:0}
+.bg-glow1{position:fixed;width:600px;height:600px;background:radial-gradient(circle,rgba(79,142,255,0.06) 0%,transparent 70%);top:-200px;right:-100px;pointer-events:none;z-index:0}
+.bg-glow2{position:fixed;width:500px;height:500px;background:radial-gradient(circle,rgba(34,197,94,0.04) 0%,transparent 70%);bottom:0;left:-100px;pointer-events:none;z-index:0}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 60px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,7,13,0.9);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.logo{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text)}
+.logo span{color:var(--accent)}
+.nav-menu{display:flex;gap:4px}
+.nav-menu a{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;transition:all 0.2s}
+.nav-menu a:hover{color:var(--text);background:var(--bg3)}
+.nav-dl{padding:8px 18px;background:var(--accent);color:#fff;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s}
+.nav-dl:hover{background:#6b9fff;box-shadow:0 0 20px rgba(79,142,255,0.3)}
+.page{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 40px 120px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:64px}
+.hero-inner{display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:center}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);padding:6px 16px;border-radius:100px;font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:0.1em;margin-bottom:24px}
+.tag-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 8px var(--green)}50%{opacity:0.3;box-shadow:none}}
+.hero-eyebrow{font-family:var(--mono);font-size:12px;color:var(--text2);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px}
+.hero-name{font-size:clamp(36px,4.5vw,62px);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:10px}
+.hero-name em{display:block;color:var(--accent);font-style:normal}
+.hero-role{font-size:clamp(28px,3.5vw,46px);font-weight:800;line-height:1;letter-spacing:-0.04em;margin-bottom:28px;color:transparent;-webkit-text-stroke:1.5px rgba(79,142,255,0.5)}
+.hero-bio{font-size:15px;line-height:1.85;color:var(--text2);max-width:500px;margin-bottom:36px;padding-left:16px;border-left:2px solid var(--border2)}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-blue{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s}
+.btn-blue:hover{background:#6b9fff;transform:translateY(-2px);box-shadow:0 8px 24px rgba(79,142,255,0.3)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text);padding:12px 28px;border-radius:8px;border:1px solid var(--border2);font-size:14px;font-weight:500;text-decoration:none;transition:all 0.2s}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.avatar-col{display:flex;flex-direction:column;align-items:center;gap:16px}
+.avatar-box{width:320px;height:360px;border-radius:20px;overflow:hidden;background:var(--card);border:1px solid var(--border2);position:relative}
+.avatar-box img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-init{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-family:var(--jakarta);font-size:90px;font-weight:800;color:var(--accent);background:var(--bg3)}
+.avatar-badge{background:rgba(5,7,13,0.9);backdrop-filter:blur(10px);border:1px solid var(--border2);padding:8px 20px;border-radius:100px;font-family:var(--mono);font-size:11px;color:var(--accent);white-space:nowrap;letter-spacing:0.08em}
+.avatar-info{width:100%;display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.ainfo-row{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--text2);transition:all 0.2s;text-decoration:none}
+.ainfo-row:hover{border-color:var(--accent);color:var(--accent);background:rgba(79,142,255,0.05)}
+.ainfo-icon{color:var(--accent);flex-shrink:0;width:16px;text-align:center;font-size:13px}
+section{padding:80px 0}
+.sec-label{display:flex;align-items:center;gap:14px;margin-bottom:48px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);padding:4px 10px;background:rgba(79,142,255,0.08);border:1px solid rgba(79,142,255,0.2);border-radius:4px}
+.sec-title{font-size:28px;font-weight:800;letter-spacing:-0.02em}
+.sec-bar{flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent)}
+.about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:start}
+.about-text{font-size:15px;line-height:1.9;color:var(--text2)}
+.about-text p+p{margin-top:14px}
+.about-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;transition:border-color 0.2s}
+.info-card:hover{border-color:var(--border2)}
+.info-card-icon{font-size:20px;margin-bottom:10px}
+.info-card-val{font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px}
+.info-card-key{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase}
+.edu-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:32px;display:flex;gap:24px;align-items:flex-start;transition:border-color 0.3s}
+.edu-card:hover{border-color:var(--border2)}
+.edu-logo{width:56px;height:56px;border-radius:10px;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.edu-degree{font-size:17px;font-weight:700;margin-bottom:6px}
+.edu-school{font-size:15px;color:var(--accent);font-weight:600;margin-bottom:12px}
+.edu-meta{display:flex;gap:10px;flex-wrap:wrap}
+.edu-tag{font-family:var(--mono);font-size:11px;color:var(--text2);background:var(--bg3);border:1px solid var(--border);padding:4px 10px;border-radius:4px}
+.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.skill-cat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color 0.3s}
+.skill-cat:hover{border-color:var(--border2)}
+.skill-cat-head{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.skill-cat-ico{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ico-blue{background:rgba(79,142,255,0.1);border:1px solid rgba(79,142,255,0.2)}
+.ico-green{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2)}
+.ico-purple{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2)}
+.ico-cyan{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2)}
+.skill-cat-name{font-size:14px;font-weight:700}
+.skill-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.stag{font-family:var(--mono);font-size:12px;padding:6px 12px;border-radius:6px;border:1px solid transparent;transition:all 0.2s;cursor:default}
+.stag:hover{transform:translateY(-2px)}
+.stag-blue{background:rgba(79,142,255,0.07);border-color:rgba(79,142,255,0.2);color:#7aaaff}
+.stag-green{background:rgba(34,197,94,0.07);border-color:rgba(34,197,94,0.2);color:var(--green)}
+.stag-purple{background:rgba(168,85,247,0.07);border-color:rgba(168,85,247,0.2);color:#c084fc}
+.stag-amber{background:rgba(245,158,11,0.07);border-color:rgba(245,158,11,0.2);color:var(--amber)}
+.stag-cyan{background:rgba(0,212,255,0.07);border-color:rgba(0,212,255,0.2);color:var(--cyan)}
+.skill-bars{display:flex;flex-direction:column;gap:10px}
+.sbar-row{display:flex;flex-direction:column;gap:5px}
+.sbar-top{display:flex;justify-content:space-between}
+.sbar-name{font-family:var(--mono);font-size:11px;color:var(--text2)}
+.sbar-pct{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.sbar-track{height:2px;background:var(--border);border-radius:2px;overflow:hidden}
+.sbar-fill{height:100%;border-radius:2px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.fill-blue{background:linear-gradient(90deg,var(--accent),var(--cyan))}
+.fill-green{background:linear-gradient(90deg,var(--green),#86efac)}
+.fill-purple{background:linear-gradient(90deg,#a855f7,#c084fc)}
+.fill-amber{background:linear-gradient(90deg,var(--amber),#fcd34d)}
+.projects-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.project-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;transition:all 0.3s;position:relative;overflow:hidden}
+.project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--cyan));transform:scaleX(0);transition:transform 0.3s;transform-origin:left}
+.project-card:hover{border-color:var(--border2);transform:translateY(-4px)}
+.project-card:hover::before{transform:scaleX(1)}
+.project-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.project-name{font-size:16px;font-weight:700}
+.project-links{display:flex;gap:8px}
+.project-link{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;text-decoration:none;border:1px solid var(--border2);color:var(--text2);transition:all 0.2s}
+.project-link:hover{border-color:var(--accent);color:var(--accent)}
+.project-desc{font-size:13.5px;color:var(--text2);line-height:1.7;margin-bottom:16px}
+.project-stack{display:flex;flex-wrap:wrap;gap:6px}
+.pstack{font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg3);border:1px solid var(--border);color:var(--text3)}
+.exp-list{display:flex;flex-direction:column;gap:20px}
+.exp-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;transition:border-color 0.3s}
+.exp-card:hover{border-color:var(--border2)}
+.exp-title{font-size:16px;font-weight:700;margin-bottom:4px}
+.exp-company{font-size:14px;color:var(--accent);font-weight:600;margin-bottom:10px}
+.exp-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.exp-tag{font-family:var(--mono);font-size:11px;color:var(--text2);background:var(--bg3);border:1px solid var(--border);padding:3px 10px;border-radius:4px}
+.exp-desc{font-size:13.5px;color:var(--text2);line-height:1.75}
+.exp-desc ul{list-style:none;display:flex;flex-direction:column;gap:6px;padding:0}
+.exp-desc li{display:flex;gap:8px;align-items:flex-start}
+.exp-desc li::before{content:'▸';color:var(--accent);flex-shrink:0;font-size:11px;margin-top:3px}
+.goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.goal-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;transition:all 0.3s}
+.goal-card:hover{transform:translateY(-3px);border-color:var(--border2)}
+.goal-card.short{border-top:2px solid var(--accent)}
+.goal-card.long{border-top:2px solid var(--green)}
+.goal-badge{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;padding:4px 10px;border-radius:100px;display:inline-block;margin-bottom:14px}
+.short .goal-badge{background:rgba(79,142,255,0.1);color:var(--accent)}
+.long .goal-badge{background:rgba(34,197,94,0.1);color:var(--green)}
+.goal-heading{font-size:18px;font-weight:700;margin-bottom:16px}
+.goal-items{display:flex;flex-direction:column;gap:10px}
+.goal-item{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--text2);line-height:1.6}
+.goal-arrow{color:var(--text3);flex-shrink:0;font-family:var(--mono);font-size:12px;margin-top:1px}
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;display:flex;align-items:center;gap:16px;text-decoration:none;transition:all 0.3s}
+.contact-card:hover{border-color:var(--accent);background:rgba(79,142,255,0.04);transform:translateY(-3px)}
+.contact-ico{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.cico-blue{background:rgba(79,142,255,0.1);border:1px solid rgba(79,142,255,0.2)}
+.cico-green{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2)}
+.cico-purple{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2)}
+.cico-amber{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2)}
+.cico-cyan{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2)}
+.contact-label{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}
+.contact-val{font-size:13px;font-weight:600;color:var(--text)}
+.contact-card:hover .contact-val{color:var(--accent)}
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28px 40px;display:flex;justify-content:space-between;align-items:center;max-width:1120px;margin:0 auto;flex-wrap:wrap;gap:12px}
+footer span{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.fa{color:var(--accent)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+.reveal.on{opacity:1;transform:none}
+@media(max-width:900px){
+  nav{padding:0 20px}
+  .page{padding:0 20px 80px}
+  .hero-inner{grid-template-columns:1fr}
+  .about-grid,.skills-grid,.projects-grid,.goals-grid,.contact-grid{grid-template-columns:1fr}
+  .avatar-box{width:100%;height:260px}
+  .avatar-col{width:100%}
+}
+@media print{
+  nav,.bg-grid,.bg-glow1,.bg-glow2{display:none}
+  body{background:#fff;color:#000}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow1"></div>
+<div class="bg-glow2"></div>
+
+<!-- ============================================================
+     NAVBAR — Sửa logo nếu muốn
+     ============================================================ -->
+<nav>
+  <div class="logo">phu<span>sang</span><div.de></div></div>
+  <div class="nav-menu">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <button class="nav-dl" onclick="window.print()">⬇ Download CV</button>
+</nav>
+
+<div class="page">
+
+  <!-- ============================================================
+       HERO SECTION
+       Sửa: tên, chức danh, bio, ảnh
+       ============================================================ -->
+  <section class="hero" id="home">
+    <div class="hero-inner">
+
+      <!-- BÊN TRÁI: Tên + Bio + Buttons -->
+      <div class="reveal">
+        <div class="hero-tag"><span class="tag-dot"></span> OPEN TO INTERNSHIP</div>
+        <p class="hero-eyebrow">Hello, I'm</p>
+
+        <!-- ✏️ SỬA TÊN -->
+        <h1 class="hero-name">
+          Lê Hoàng
+          <em>Phú Sang</em>
+        </h1>
+
+        <!-- ✏️ SỬA CHỨC DANH LỚN -->
+        <p class="hero-role">DATA ENGINEER</p>
+
+        <!-- ✏️ SỬA BIO -->
+        <p class="hero-bio">
+          IT student at Greenwich Vietnam University, passionate about data systems,
+          pipelines, and databases. Building skills in Python, SQL, FastAPI and cloud
+          tools to become a professional Data Engineer.
+        </p>
+
+        <div class="hero-btns">
+          <button class="btn-blue" onclick="window.print()">⬇ Download CV</button>
+          <a href="#contact" class="btn-ghost">✉ Contact Me</a>
+        </div>
+      </div>
+
+      <!-- BÊN PHẢI: Ảnh + Thông tin liên hệ -->
+      <div class="avatar-col reveal" style="transition-delay:.15s">
+
+        <!-- ✏️ SỬA ẢNH: thay avatar.jpg bằng tên file ảnh của bạn -->
+        <div class="avatar-box">
+          <div class="avatar-init" id="av-init">LS</div>
+          <img id="av-img" src="avatar.jpg" alt="Lê Hoàng Phú Sang"
+            style="display:none"
+            onload="this.style.display='block';document.getElementById('av-init').style.display='none'"
+            onerror="this.style.display='none'">
+        </div>
+
+        <div class="avatar-badge">⚡ Junior Data Engineer</div>
+
+        <!-- ✏️ SỬA THÔNG TIN LIÊN HỆ DƯỚI ẢNH -->
+        <div class="avatar-info">
+          <a class="ainfo-row" href="mailto:sangphu243@gmail.com">
+            <span class="ainfo-icon">✉</span> sangphu243@gmail.com
+          </a>
+          <a class="ainfo-row" href="tel:+84822731025">
+            <span class="ainfo-icon">☎</span> +84 822 731 025
+          </a>
+          <a class="ainfo-row" href="https://github.com/yourhandle" target="_blank">
+            <span class="ainfo-icon">⌥</span> github.com/yourhandle
+          </a>
+          <a class="ainfo-row" href="https://linkedin.com/in/https://www.linkedin.com/in/sang-phú-29757b3b5/" target="_blank">
+            <span class="ainfo-icon">in</span> linkedin.com/in/https://www.linkedin.com/in/sang-phú-29757b3b5/
+          </a>
+          <span class="ainfo-row">
+            <span class="ainfo-icon">📍</span> Vietnam 🇻🇳
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT ME
+       Sửa: đoạn giới thiệu, 4 thông tin nhanh
+       ============================================================ -->
+  <section id="about" class="reveal">
+    <div class="sec-label">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">About Me</h2>
+      <div class="sec-bar"></div>
+    </div>
+    <div class="about-grid">
+
+      <!-- ✏️ SỬA ĐOẠN GIỚI THIỆU -->
+      <div class="about-text">
+        <p>I am an IT student at <strong style="color:var(--text)">Greenwich Vietnam University</strong>,
+        passionate about data systems and databases. Currently learning Python, SQL and
+        data pipelines to become a professional Data Engineer.</p>
+        <p>I enjoy building ETL pipelines, working with PostgreSQL and transforming raw
+        data into actionable insights using Python and FastAPI.</p>
+        <p>Actively looking for a <strong style="color:var(--accent)">Data Engineer Junior</strong>
+        where I can apply and grow my skills in a real-world environment.</p>
+      </div>
+
+      <!-- ✏️ SỬA 4 CARDS THÔNG TIN NHANH -->
+      <div class="about-cards">
+        <div class="info-card">
+          <div class="info-card-icon">🎓</div>
+          <div class="info-card-val">University</div>  <!-- Sửa giá trị -->
+          <div class="info-card-key">Education</div>   <!-- Sửa nhãn -->
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">📍</div>
+          <div class="info-card-val">Vietnam</div>
+          <div class="info-card-key">Location</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">💼</div>
+          <div class="info-card-val">Open</div>
+          <div class="info-card-key">Status</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">🌐</div>
+          <div class="info-card-val">English B2</div>
+          <div class="info-card-key">Language</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EDUCATION
+       Sửa: tên trường, ngành, năm học
+       ============================================================ -->
+  <section id="education" class="reveal">
+    <div class="sec-label">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">Education</h2>
+      <div class="sec-bar"></div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-logo">🎓</div>
+      <div>
+        <!-- ✏️ SỬA NGÀNH HỌC -->
+        <div class="edu-degree">Bachelor of Information Technology</div>
+        <!-- ✏️ SỬA TÊN TRƯỜNG -->
+        <div class="edu-school">Greenwich Vietnam University</div>
+        <div class="edu-meta">
+          <!-- ✏️ SỬA NĂM HỌC, ĐỊA ĐIỂM, CHUYÊN NGÀNH -->
+          <span class="edu-tag">📅 2023 — 2027</span>
+          <span class="edu-tag">📍 Vietnam</span>
+          <span class="edu-tag">🎯 Data Engineering</span>
+          <span class="edu-tag">🌐 English Program</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SKILLS
+       Sửa: tên skill, % progress bar
+       ============================================================ -->
+  <section id="skills" class="reveal">
+    <div class="sec-label">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Technical Skills</h2>
+      <div class="sec-bar"></div>
+    </div>
+    <div class="skills-grid">
+
+      <!-- NHÓM 1: PROGRAMMING -->
+      <div class="skill-cat">
+        <div class="skill-cat-head">
+          <div class="skill-cat-ico ico-blue">⌨️</div>
+          <span class="skill-cat-name">Programming</span>  <!-- ✏️ Sửa tên nhóm -->
+        </div>
+        <div class="skill-tags">
+          <!-- ✏️ Thêm/xóa skill tags tại đây -->
+          <span class="stag stag-blue">Python</span>
+          <span class="stag stag-cyan">FastAPI</span>
+        </div>
+        <div class="skill-bars">
+          <!-- ✏️ Sửa data-w="75" để thay đổi % thanh skill -->
+          <div class="sbar-row">
+            <div class="sbar-top"><span class="sbar-name">Python</span><span class="sbar-pct">75%</span></div>
+            <div class="sbar-track"><div class="sbar-fill fill-blue" data-w="75"></div></div>
+          </div>
+          <div class="sbar-row">
+            <div class="sbar-top"><span class="sbar-name">FastAPI</span><span class="sbar-pct">65%</span></div>
+            <div class="sbar-track"><div class="sbar-fill fill-blue" data-w="65"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NHÓM 2: DATABASE -->
+      <div class="skill-cat">
+        <div class="skill-cat-head">
+          <div class="skill-cat-ico ico-green">🗄️</div>
+          <span class="skill-cat-name">Database</span>
+        </div>
+        <div class="skill-tags">
+          <span class="stag stag-green">MySQL</span>
+          <span class="stag stag-green">PostgreSQL</span>
+        </div>
+        <div class="skill-bars">
+          <div class="sbar-row">
+            <div class="sbar-top"><span class="sbar-name">MySQL</span><span class="sbar-pct">70%</span></div>
+            <div class="sbar-track"><div class="sbar-fill fill-green" data-w="70"></div></div>
+          </div>
+          <div class="sbar-row">
+            <div class="sbar-top"><span class="sbar-name">PostgreSQL</span><span class="sbar-pct">65%</span></div>
+            <div class="sbar-track"><div class="sbar-fill fill-green" data-w="65"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NHÓM 3: TOOLS -->
+      <div class="skill-cat">
+        <div class="skill-cat-head">
+          <div class="skill-cat-ico ico-purple">⚙️</div>
+          <span class="skill-cat-name">Tools & DevOps</span>
+        </div>
+        <div class="skill-tags">
+          <span class="stag stag-purple">Docker</span>
+          <span class="stag stag-purple">VS Code</span>
+          <span class="stag stag-purple">Git</span>
+        </div>
+        <div class="skill-bars">
+          <div class="sbar-row">
+            <div class="sbar-top"><span class="sbar-name">Docker</span><span class="sbar-pct">60%</span></div>
+            <div class="sbar-track"><div class="sbar-fill fill-purple" data-w="60"></div></div>
+          </div>
+          <div class="sbar-row">
+            <div class="sbar-top"><span class="sbar-name">Git</span><span class="sbar-pct">70%</span></div>
+            <div class="sbar-track"><div class="sbar-fill fill-purple" data-w="70"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NHÓM 4: CLOUD & DATA -->
+      <div class="skill-cat">
+        <div class="skill-cat-head">
+          <div class="skill-cat-ico ico-cyan">☁️</div>
+          <span class="skill-cat-name">Cloud & Data Engineering</span>
+        </div>
+        <div class="skill-tags">
+          <span class="stag stag-amber">AWS</span>
+          <span class="stag stag-cyan">ETL</span>
+          <span class="stag stag-cyan">Data Pipeline</span>
+          <span class="stag stag-cyan">Data Warehouse</span>
+        </div>
+        <div class="skill-bars">
+          <div class="sbar-row">
+            <div class="sbar-top"><span class="sbar-name">AWS</span><span class="sbar-pct">50%</span></div>
+            <div class="sbar-track"><div class="sbar-fill fill-amber" data-w="50"></div></div>
+          </div>
+          <div class="sbar-row">
+            <div class="sbar-top"><span class="sbar-name">ETL / Pipeline</span><span class="sbar-pct">60%</span></div>
+            <div class="sbar-track"><div class="sbar-fill fill-blue" data-w="60"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROJECTS
+       Sửa: tên project, mô tả, tech stack, link
+       Để thêm project mới: copy 1 block project-card và dán vào
+       ============================================================ -->
+  <section id="projects" class="reveal">
+    <div class="sec-label">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Projects</h2>
+      <div class="sec-bar"></div>
+    </div>
+    <div class="projects-grid">
+
+      <!-- ✏️ PROJECT 1 — Sửa tên, mô tả, link, stack -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">📊 Tên Project 1</div>
+          <div class="project-links">
+            <a href="LINK_GITHUB" class="project-link">GitHub</a>
+            <a href="LINK_DEMO" class="project-link">Demo</a>
+          </div>
+        </div>
+        <p class="project-desc">
+          Mô tả project của bạn ở đây. Giải thích bạn đã làm gì,
+          dùng công nghệ gì và kết quả đạt được.
+        </p>
+        <div class="project-stack">
+          <span class="pstack">Python</span>       <!-- ✏️ Sửa tech stack -->
+          <span class="pstack">PostgreSQL</span>
+          <span class="pstack">Docker</span>
+        </div>
+      </div>
+
+      <!-- ✏️ PROJECT 2 — Sửa tên, mô tả, link, stack -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">🗄️ Tên Project 2</div>
+          <div class="project-links">
+            <a href="LINK_GITHUB" class="project-link">GitHub</a>
+          </div>
+        </div>
+        <p class="project-desc">
+          Mô tả project của bạn ở đây. Giải thích bạn đã làm gì,
+          dùng công nghệ gì và kết quả đạt được.
+        </p>
+        <div class="project-stack">
+          <span class="pstack">FastAPI</span>
+          <span class="pstack">MySQL</span>
+          <span class="pstack">Python</span>
+        </div>
+      </div>
+
+      <!-- ✏️ PROJECT 3 — Copy block này để thêm project mới -->
+      <!--
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">🚀 Tên Project 3</div>
+          <div class="project-links">
+            <a href="LINK_GITHUB" class="project-link">GitHub</a>
+          </div>
+        </div>
+        <p class="project-desc">Mô tả project...</p>
+        <div class="project-stack">
+          <span class="pstack">AWS</span>
+          <span class="pstack">Python</span>
+        </div>
+      </div>
+      -->
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EXPERIENCE
+       Hiện đang để trống vì chưa có kinh nghiệm
+       Khi có internship: bỏ comment block bên dưới và điền thông tin
+       ============================================================ -->
+  <section id="experience" class="reveal">
+    <div class="sec-label">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">Experience</h2>
+      <div class="sec-bar"></div>
+    </div>
+    <div class="exp-list">
+
+      <!-- ✏️ KHI CÓ KINH NGHIỆM: xóa block "chưa có" bên dưới -->
+      <!-- và bỏ comment block exp-card -->
+
+      <!-- HIỂN THỊ KHI CHƯA CÓ KINH NGHIỆM -->
+      <div style="background:var(--card);border:1px dashed var(--border2);border-radius:12px;padding:48px;text-align:center">
+        <div style="font-size:32px;margin-bottom:12px;opacity:0.4">💼</div>
+        <div style="font-size:14px;color:var(--text3);font-weight:500">Chưa có kinh nghiệm làm việc</div>
+        <div style="font-family:var(--mono);font-size:12px;color:var(--text3);margin-top:8px">// Thêm internship hoặc part-time vào đây</div>
+      </div>
+
+      
+
+    </div>
+  </section>
+
+ 
+  <section id="goals" class="reveal">
+    <div class="sec-label">
+      <span class="sec-num">06</span>
+      <h2 class="sec-title">Career Goals</h2>
+      <div class="sec-bar"></div>
+    </div>
+    <div class="goals-grid">
+
+      <!-- ✏️ SỬA MỤC TIÊU NGẮN HẠN -->
+      <div class="goal-card short">
+        <span class="goal-badge">Short-term</span>
+        <div class="goal-heading">Getting Started 🚀</div>
+        <div class="goal-items">
+          <div class="goal-item"><span class="goal-arrow">→</span>Become a Data Engineer Junior</div>
+          <div class="goal-item"><span class="goal-arrow">→</span>Improve Python & SQL skills</div>
+          <div class="goal-item"><span class="goal-arrow">→</span>Build real-world data pipeline projects</div>
+          <div class="goal-item"><span class="goal-arrow">→</span>Get AWS certification</div>
+        </div>
+      </div>
+
+      <!-- ✏️ SỬA MỤC TIÊU DÀI HẠN -->
+      <div class="goal-card long">
+        <span class="goal-badge">Long-term</span>
+        <div class="goal-heading">The Vision 🎯</div>
+        <div class="goal-items">
+          <div class="goal-item"><span class="goal-arrow">→</span>Become a Senior Data Engineer</div>
+          <div class="goal-item"><span class="goal-arrow">→</span>Build scalable data pipelines</div>
+          <div class="goal-item"><span class="goal-arrow">→</span>Architect cloud-native data platforms</div>
+          <div class="goal-item"><span class="goal-arrow">→</span>Lead data engineering teams</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+       Sửa: email, số điện thoại, github, linkedin
+       ============================================================ -->
+  <section id="contact" class="reveal">
+    <div class="sec-label">
+      <span class="sec-num">07</span>
+      <h2 class="sec-title">Contact</h2>
+      <div class="sec-bar"></div>
+    </div>
+    <div class="contact-grid">
+
+      <!-- ✏️ SỬA EMAIL -->
+      <a class="contact-card" href="mailto:sangphu243@gmail.com">
+        <div class="contact-ico cico-blue">✉️</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-val">sangphu243@gmail.com</div>
+        </div>
+      </a>
+
+      <!-- ✏️ SỬA SỐ ĐIỆN THOẠI -->
+      <a class="contact-card" href="tel:+84822731025">
+        <div class="contact-ico cico-green">📱</div>
+        <div>
+          <div class="contact-label">Phone</div>
+          <div class="contact-val">+84 822 731 025</div>
+        </div>
+      </a>
+
+      <!-- ✏️ SỬA GITHUB -->
+      <a class="contact-card" href="https://github.com/yourhandle" target="_blank">
+        <div class="contact-ico cico-purple">⌥</div>
+        <div>
+          <div class="contact-label">GitHub</div>
+          <div class="contact-val">github.com/yourhandle</div>
+        </div>
+      </a>
+
+      <!-- ✏️ SỬA LINKEDIN -->
+      <a class="contact-card" href="https://www.linkedin.com/in/sang-phú-29757b3b5/" target="_blank">
+        <div class="contact-ico cico-cyan">in</div>
+        <div>
+          <div class="contact-label">LinkedIn</div>
+          <div class="contact-val">linkedin.com/https://www.linkedin.com/in/sang-phú-29757b3b5//</div>
+        </div>
+      </a>
+
+      <!-- Địa điểm — không cần sửa -->
+      <a class="contact-card" href="#">
+        <div class="contact-ico cico-amber">📍</div>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-val">Vietnam 🇻🇳</div>
+        </div>
+      </a>
+
+      <!-- Trường học — không cần sửa -->
+      <a class="contact-card" href="#">
+        <div class="contact-ico cico-green">🎓</div>
+        <div>
+          <div class="contact-label">University</div>
+          <div class="contact-val">Greenwich Vietnam</div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <!-- ✏️ SỬA TÊN + NĂM -->
+  <span>Lê Hoàng Phú Sang <span class="fa">·</span> Junior Data Engineer</span>
+  <span>Greenwich Vietnam University <span class="fa">·</span> 2026</span>
+</footer>
+
+<script>
+// Hiệu ứng fade-in khi scroll
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('on') })
+}, {threshold: 0.08});
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+// Animate skill bars khi hiện ra màn hình
+const bo = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.sbar-fill').forEach(b => {
+        b.style.width = b.dataset.w + '%';
+      });
+    }
+  });
+}, {threshold: 0.3});
+document.querySelectorAll('.skill-cat').forEach(el => bo.observe(el));
+</script>
+</body>
+</html>
